@@ -1,7 +1,3 @@
-permissions:
-  id-token: write
-  contents: read
-
 name: Build and Deploy
 
 on:
@@ -10,52 +6,55 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: sentiment-api
   EKS_CLUSTER: mlops-cluster
 
 jobs:
-  # ── Job 1: Test ──────────────────────────────────────
   test:
     name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
-
       - name: Install dependencies
         run: pip install -r requirements.txt pytest httpx
-
       - name: Run tests
         run: pytest tests/ -v
 
-  # ── Job 2: Build & Push ──────────────────────────────
   build-and-push:
     name: Build & Push to ECR
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write
+      contents: read
     outputs:
       image-tag: ${{ github.sha }}
-
     steps:
       - uses: actions/checkout@v4
-
+      - name: Debug OIDC
+        run: |
+          echo "Role ARN: ${{ secrets.AWS_ROLE_ARN }}"
+          echo "Repo: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
       - name: Build, tag, and push image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -65,36 +64,28 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "Pushed: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-  # ── Job 3: Deploy ────────────────────────────────────
   deploy:
     name: Deploy to EKS
     needs: build-and-push
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
       - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig \
-            --name ${{ env.EKS_CLUSTER }} \
-            --region ${{ env.AWS_REGION }}
-
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
       - name: Install Helm
         uses: azure/setup-helm@v4
-
       - name: Deploy with Helm
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -106,7 +97,6 @@ jobs:
             --wait \
             --timeout=5m \
             --atomic
-
       - name: Verify deployment
         run: |
           kubectl rollout status deployment/sentiment-api
