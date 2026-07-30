@@ -38,7 +38,7 @@ module "eks" {
       min_size       = 1
       max_size       = 3
       desired_size   = 2
-      instance_types = ["t3.medium"]
+  instance_types = ["t3.small"]
     }
   }
 
@@ -121,7 +121,9 @@ resource "aws_iam_role_policy" "github_actions" {
           "ecr:PutImage",
           "ecr:InitiateLayerUpload",
           "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload"
+          "ecr:CompleteLayerUpload",
+          "ecr:DescribeRepositories",
+          "ecr:ListImages"
         ]
         Resource = "*"
       },
@@ -129,7 +131,8 @@ resource "aws_iam_role_policy" "github_actions" {
         Effect = "Allow"
         Action = [
           "eks:DescribeCluster",
-          "eks:ListClusters"
+          "eks:ListClusters",
+          "eks:AccessKubernetesApi"
         ]
         Resource = "*"
       }
