@@ -45,3 +45,8 @@ serviceMonitor:
   enabled: true
   interval: 15s
   path: /metrics
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  automount: false
