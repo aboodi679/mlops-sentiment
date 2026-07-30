@@ -101,3 +101,5 @@ jobs:
         run: |
           kubectl rollout status deployment/sentiment-api
           kubectl get pods
+
+# trigger: oidc-test-043323
