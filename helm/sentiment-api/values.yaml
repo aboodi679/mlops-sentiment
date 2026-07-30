@@ -50,3 +50,10 @@ serviceAccount:
   name: ""
   annotations: {}
   automount: false
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
