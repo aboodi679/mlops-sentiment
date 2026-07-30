@@ -14,3 +14,7 @@ output "configure_kubectl" {
   description = "Run this after apply to connect kubectl"
   value = "aws eks update-kubeconfig --name ${module.eks.cluster_name} --region ${var.region}"
 }
+output "github_actions_role_arn" {
+  value = aws_iam_role.github_actions.arn
+  description = "Use this in GitHub Actions workflow"
+}
