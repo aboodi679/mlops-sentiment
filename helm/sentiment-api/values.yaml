@@ -1,0 +1,47 @@
+replicaCount: 2
+
+image:
+  repository: placeholder  # replaced by CI/CD with real ECR URL
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: "sentiment-api"
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 15
+  periodSeconds: 5
+
+serviceMonitor:
+  enabled: true
+  interval: 15s
+  path: /metrics
