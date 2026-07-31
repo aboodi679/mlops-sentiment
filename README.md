@@ -67,7 +67,8 @@ Response:
 
 ---
 
-**[SCREENSHOT 3 HERE — terminal showing the predict response]**
+<img width="539" height="34" alt="image" src="https://github.com/user-attachments/assets/b98df257-0ef2-495f-b07a-1a6067a195e8" />
+
 
 ---
 
@@ -83,7 +84,8 @@ Authentication uses GitHub OIDC (`AssumeRoleWithWebIdentity`) — no AWS access 
 
 ---
 
-**[SCREENSHOT 1 HERE — GitHub Actions showing all 3 jobs green]**
+<img width="1349" height="333" alt="image" src="https://github.com/user-attachments/assets/6cc566dc-dbc9-413d-8c60-80f73dcfeb02" />
+
 
 ---
 
@@ -95,7 +97,8 @@ kubectl get pods
 
 ---
 
-**[SCREENSHOT HERE — kubectl get pods showing 2/2 Running]**
+<img width="775" height="83" alt="image" src="https://github.com/user-attachments/assets/2bc29241-7c58-417e-84b3-aec9f5a5571d" />
+
 
 ---
 
@@ -105,7 +108,8 @@ kubectl get svc sentiment-api
 
 ---
 
-**[SCREENSHOT HERE — kubectl get svc showing LoadBalancer external IP]**
+<img width="1128" height="138" alt="image" src="https://github.com/user-attachments/assets/c2a21f04-7cb4-4f0a-9907-6a644b053995" />
+
 
 ---
 
@@ -124,11 +128,13 @@ Custom metrics exposed:
 
 ---
 
-**[SCREENSHOT 4 HERE — Prometheus targets showing sentiment-api 2/2 UP]**
+<img width="1900" height="471" alt="image" src="https://github.com/user-attachments/assets/3b042bec-66ea-46a0-94bf-81db13635813" />
+
 
 ---
 
-**[SCREENSHOT 5 HERE — Grafana showing inference_latency_seconds metrics]**
+<img width="1455" height="694" alt="image" src="https://github.com/user-attachments/assets/20ab3986-fe8f-4ec4-ab77-e8604b119c6f" />
+
 
 ---
 
@@ -179,9 +185,8 @@ terraform apply
 ## Key Values
 
 ```
-AWS Account:  026243800492
+AWS Account:  ****
 Region:       us-east-1
 EKS Cluster:  mlops-cluster
-ECR URL:      026243800492.dkr.ecr.us-east-1.amazonaws.com/sentiment-api
 GitHub Repo:  aboodi679/mlops-sentiment
 ```
