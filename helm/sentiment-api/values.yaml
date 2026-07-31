@@ -42,7 +42,7 @@ readinessProbe:
   periodSeconds: 5
 
 serviceMonitor:
-  enabled: true
+ enabled: false
   interval: 15s
   path: /metrics
 serviceAccount:
@@ -63,3 +63,4 @@ httpRoute:
   gatewayName: ""
   hostnames: []
   parentRefs: []
+
