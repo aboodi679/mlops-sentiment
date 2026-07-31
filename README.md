@@ -5,9 +5,22 @@ A production-grade MLOps pipeline serving a DistilBERT sentiment classifier on A
 ## Architecture
 
 ```
-<img width="3373" height="2019" alt="mlops-architecture-v3 drawio" src="https://github.com/user-attachments/assets/b991ff36-bbaa-4cb0-9f82-d50e3d6433a7" />
-
-
+GitHub Actions (CI/CD)
+    │
+    ├── Test → Build → Push to ECR
+    │
+    └── Helm Deploy → EKS Cluster
+                          │
+                    ┌─────┴─────┐
+                    Pod 1      Pod 2
+                 (DistilBERT) (DistilBERT)
+                    └─────┬─────┘
+                          │
+                    LoadBalancer
+                          │
+                    /predict /health /metrics
+                          │
+                    Prometheus → Grafana
 ```
 
 ## Stack
