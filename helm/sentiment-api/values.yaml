@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: placeholder  # replaced by CI/CD with real ECR URL
+  repository: placeholder
   tag: latest
   pullPolicy: Always
 
@@ -42,9 +42,10 @@ readinessProbe:
   periodSeconds: 5
 
 serviceMonitor:
- enabled: false
+  enabled: false
   interval: 15s
   path: /metrics
+
 serviceAccount:
   create: true
   name: ""
@@ -63,4 +64,3 @@ httpRoute:
   gatewayName: ""
   hostnames: []
   parentRefs: []
-
